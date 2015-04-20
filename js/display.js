@@ -117,8 +117,8 @@ var JoinForm = React.createClass({
               return;
         }
         this.props.onJoinSubmit({id: id, name: author, contact: text});
-        this.refs.author.getDOMNode().value = '';
-        this.refs.text.getDOMNode().value = '';
+        //this.refs.author.getDOMNode().value = '';
+        //this.refs.text.getDOMNode().value = '';
         return;
     },
     render: function() {
@@ -227,6 +227,7 @@ var display = {
         var id = data.id;
         var name = data.name;
         var contact = data.contact;
+        /*
         for (var i = 0 ; i < this.products.length ; i++) {
             var element = this.products[i];
             if (element.id == id) {
@@ -238,6 +239,25 @@ var display = {
                 break;
             }
         }
+       */
+        var newJoin = {
+            id: id,
+            name: name,
+            contact: contact,
+            type: "join"
+        }
+        $.ajax({
+            url: SERVER_URL+"/data.json",
+            dataType: 'json',
+            type: 'POST',
+            data: newJoin,
+            success: function(data) {
+                getData(function(data){
+                    display.products = data;
+                    display.update();
+                });
+            }
+        });
     },
 
     getNextId() {

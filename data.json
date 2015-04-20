@@ -1,6 +1,11 @@
 [
     {
-        "list": [],
+        "list": [
+            {
+                "contact": "x",
+                "name": "x"
+            }
+        ],
         "id": "2111",
         "location": "Morewood Court Apartments, Morewood Avenue, Pittsburgh, PA, United States",
         "lat": "40.453709",
