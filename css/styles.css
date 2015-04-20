@@ -1,0 +1,21 @@
+.item { width: 50%; }
+.product_list {
+    width: 600px;
+    margin: 0 auto;
+}
+
+.product {
+    padding: 50px 0px;
+}
+
+.product_img {
+    width: 250px;
+}
+
+.attendee_list {
+    margin-bottom: 30px;
+}
+
+.modal-content {
+    padding: 40px 100px;
+}

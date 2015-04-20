@@ -1,0 +1,147 @@
+<html>
+    <head>
+        <!-- Bootstrap Core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link href="css/agency.css" rel="stylesheet">
+
+
+        <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyBH-XVGIfvIT8oioFmU6c7b556qoabl5nk&sensor=false&&libraries=places"></script>
+        <script src="http://fb.me/react-0.12.2.js"></script>
+        <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
+        <script src="js/tplan.js"></script>
+        <script src="js/jquery.timepicker.min.js"></script>
+        <link href="css/map.css" rel="stylesheet">
+        <link href="css/styles.css" rel="stylesheet">
+        <link href="css/jquery.timepicker.css" rel="stylesheet">
+
+    </head>
+    <body>
+
+        <!--
+        <button id="open-add-spot">Add</button>
+        -->
+        <button id="open-add-product" class="btn">Add</button>
+
+
+        <div style="padding-top: 5%;" id="add-spot-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div id="add-spot-modal-content" style="padding: 60px;">
+                        <br>
+                        <input id="start-time" type="text" class="ui-timepicker-input">
+                        <br>
+                        <input id="end-time" type="text" class="ui-timepicker-input">
+                        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                        <div id="map-canvas" style="width:800px; height:300px"></div>
+                    </div>
+                    <button id="add-spot">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div style="padding-top: 5%;" id="user-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="height: 200px; padding: 50px; 100px;">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Your Name *" id="user-name">
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" placeholder="Your Email *" id="user-email" required="" data-validation-required-message="Please enter your email address.">
+                            <p class="help-block text-danger"></p>
+                        </div>
+                    </div>
+                    <button id="user-info-submit" type="submit" class="btn btn-xl">Submit</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div style="padding-top: 5%;" id="add-product-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form>
+                        <div class="form-group">
+                            <label for="product-name">Name</label>
+                            <input type="text" name="product-name" id="product-name" placeholder="Enter Product Name"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="product-url">Image</label>
+                            <input type="text" name="product-url" id="product-url" placeholder="Enter Image URL"/>
+                        </div>
+                    </form>
+                    <button id="add-product" class="btn btn-primary">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="content">
+        </div>
+
+
+        <!-- jQuery -->
+        <script src="js/jquery.js"></script>
+
+        <!-- Bootstrap Core JavaScript -->
+        <script src="js/bootstrap.min.js"></script>
+
+
+
+        <script src="js/display.js" type="text/jsx;harmony=true"></script>
+        <script src="js/isotope.pkgd.min.js"></script>
+        <script>
+            var User = {};
+            function init() {
+
+
+
+
+
+        $("#open-add-spot").click(function(event){
+                planner.addModalInit();
+                planner.openAddSpotModal();
+                planner.mapInit();
+                });
+
+        $("#open-add-product").click(function(event){
+            $('#add-product-modal').modal('show');
+            });
+
+        $("#add-product").click(function(event){
+            var name = $("#product-name").val();
+            var url = $("#product-url").val();
+            if (name == "" || url == "") return;
+            display.insertProduct(name, url);
+            $('#add-product-modal').modal('hide');
+        });
+
+        $("#user-info-submit").click(function(event){
+            var name = $("#user-name").val();
+            var email = $("#user-email").val();
+            User.name = name;
+            User.email = email;
+            $('#user-modal').modal('hide');
+        });
+
+    }
+
+    function getData(f){
+        $.ajax({
+            url: "data.json",
+            dataType: "json",
+            success: function(data){
+                f(data);
+            }
+            });
+        }
+
+        $(document).ready(function() {
+            $('#user-modal').modal('show');
+            init();
+        });
+    </script>
+    </body>
+</html>
