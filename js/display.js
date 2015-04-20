@@ -21,6 +21,7 @@ var ProductList = React.createClass({
                   </Product>
                 );
         });
+
       return (
           <div className="product_list">
           {commentNodes}
@@ -32,11 +33,16 @@ var ProductList = React.createClass({
 
 var Product = React.createClass({
   render: function() {
+      var mapId = "map-canvas-"+this.props.data.id;
       return (
             <div className="product">
                     <h3>
                         {this.props.data.product_name}
                     </h3>
+                    <h4>
+                        {this.props.data.location}
+                    </h4>
+                    <hr />
                 <div className="row">
                 <div className="col-xs-5">
                     <div>
@@ -44,9 +50,10 @@ var Product = React.createClass({
                     </div>
                 </div>
                 <div className="col-xs-7">
+                    <div id={mapId} className="product_map"></div>
+                </div>
+                </div>
                     <AttendeeListBox data={this.props.data.list} id={this.props.data.id}/>
-                </div>
-                </div>
             </div>
           );
     }
@@ -59,6 +66,7 @@ var AttendeeListBox = React.createClass({
     render: function() {
         return (
             <div>
+            <hr />
             <AttendeeList data={this.props.data} />
             <hr />
             <JoinForm id={this.props.id} onJoinSubmit={this.handleJoinSubmit}/>
@@ -101,8 +109,10 @@ var JoinForm = React.createClass({
     handleSubmit: function(e) {
         e.preventDefault();
         var id = this.refs.id.getDOMNode().value
-        var author = this.refs.author.getDOMNode().value.trim();
-        var text = this.refs.text.getDOMNode().value.trim();
+        //var author = this.refs.author.getDOMNode().value.trim();
+        //var text = this.refs.text.getDOMNode().value.trim();
+        var author = User.name;
+        var text = User.email;
         if (!text || !author) {
               return;
         }
@@ -115,16 +125,7 @@ var JoinForm = React.createClass({
         return (
             <form className="JoinForm" onSubmit={this.handleSubmit}>
             <input type="hidden" value={this.props.id}  ref="id" />
-            <div className="row">
-            <div className="col-xs-6">
-                <input type="text" placeholder="Your name" ref="author" />
-            </div>
-            <div className="col-xs-6">
-                <input type="text" placeholder="How to contact you" ref="text" />
-            </div>
-            </div>
-            <br />
-            <input type="submit" value="Post" />
+            <button type="submit" className="btn btn-primary">Join</button>
             </form>
         );
     }
@@ -214,6 +215,12 @@ var display = {
             itemSelector: '.item',
             layoutMode: 'fitRows'
         });
+
+        this.products.forEach(function(e){
+            var mapId = "map-canvas-" + e.id;
+            console.log(mapId);
+            planner.newMap(mapId, e.lat, e.lng);
+        });
     },
 
     join: function(data) {
@@ -243,15 +250,40 @@ var display = {
 
     insertProduct: function(name, url) {
         var id = display.getNextId();
+        /*
         display.products.unshift({
             id: id,
             product_name: name,
             img_url: url,
             list: []
         });
-        display.update();
-    }
-};
+       */
+      var location = $("#np_location").val();
+      var lat = $("#np_location_lat").val();
+      var lng = $("#np_location_lng").val();
+        var newProduct = {
+            id: id,
+            product_name: name,
+            img_url: url,
+            list: [],
+            location: location,
+            lat: lat,
+            lng: lng
+        }
+        $.ajax({
+            url: SERVER_URL+"/data.json",
+            dataType: 'json',
+            type: 'POST',
+            data: newProduct,
+            success: function(data) {
+                getData(function(data){
+                    display.products = data;
+                    display.update();
+                });
+            }
+        });
+        }
+    };
 
 
 getData(function(data){

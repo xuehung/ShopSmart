@@ -6,23 +6,48 @@
         <!-- Custom CSS -->
         <link href="css/agency.css" rel="stylesheet">
 
+        <!-- Custom Fonts -->
+        <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+        <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+
 
         <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyBH-XVGIfvIT8oioFmU6c7b556qoabl5nk&sensor=false&&libraries=places"></script>
         <script src="http://fb.me/react-0.12.2.js"></script>
         <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
         <script src="js/tplan.js"></script>
-        <script src="js/jquery.timepicker.min.js"></script>
         <link href="css/map.css" rel="stylesheet">
         <link href="css/styles.css" rel="stylesheet">
-        <link href="css/jquery.timepicker.css" rel="stylesheet">
 
     </head>
     <body>
 
+
+        <nav class="navbar navbar-default navbar-fixed-top navbar-shrink">
+            <div class="container">
+                <div class="navbar-header page-scroll">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <span class="navbar-brand page-scroll">ShopSmart</span>
+                </div>
+                <div class="nav navbar-nav navbar-right">
+                    <span style="margin-right: 30px; font-size: 24px; color: #fff; line-height: 50px; vertical-align: middle;">Create a Good Deal</span>
+                    <button id="open-add-product" class="btn btn-primary">Add</button>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+
         <!--
         <button id="open-add-spot">Add</button>
         -->
-        <button id="open-add-product" class="btn">Add</button>
 
 
         <div style="padding-top: 5%;" id="add-spot-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -33,8 +58,6 @@
                         <input id="start-time" type="text" class="ui-timepicker-input">
                         <br>
                         <input id="end-time" type="text" class="ui-timepicker-input">
-                        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-                        <div id="map-canvas" style="width:800px; height:300px"></div>
                     </div>
                     <button id="add-spot">Add</button>
                 </div>
@@ -63,22 +86,29 @@
         <div style="padding-top: 5%;" id="add-product-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
+                    <div class="row">
+                    <div class="col-md-12">
                     <form>
                         <div class="form-group">
-                            <label for="product-name">Name</label>
-                            <input type="text" name="product-name" id="product-name" placeholder="Enter Product Name"/>
+                            <input type="text" class="form-control" name="product-name" id="product-name" placeholder="Enter Product Name"/>
                         </div>
                         <div class="form-group">
-                            <label for="product-url">Image</label>
-                            <input type="text" name="product-url" id="product-url" placeholder="Enter Image URL"/>
+                            <input type="text" name="product-url" class="form-control" id="product-url" placeholder="Enter Image URL"/>
                         </div>
+                        <input type="hidden" id="np_location"/>
+                        <input type="hidden" id="np_location_lat"/>
+                        <input type="hidden" id="np_location_lng"/>
                     </form>
+                    </div>
+                    </div>
+                        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                        <div id="map-canvas" style="width:700px; height:300px"></div>
                     <button id="add-product" class="btn btn-primary">Add</button>
                 </div>
             </div>
         </div>
 
-        <div id="content">
+        <div style="margin-top: 80px;" id="content">
         </div>
 
 
@@ -93,6 +123,7 @@
         <script src="js/display.js" type="text/jsx;harmony=true"></script>
         <script src="js/isotope.pkgd.min.js"></script>
         <script>
+            var SERVER_URL="http://localhost:3000";
             var User = {};
             function init() {
 
@@ -100,14 +131,11 @@
 
 
 
-        $("#open-add-spot").click(function(event){
-                planner.addModalInit();
-                planner.openAddSpotModal();
-                planner.mapInit();
-                });
+        planner.mapInit();
 
         $("#open-add-product").click(function(event){
-            $('#add-product-modal').modal('show');
+                //planner.openAddProductModal();
+                $('#add-product-modal').modal('show');
             });
 
         $("#add-product").click(function(event){
@@ -130,7 +158,7 @@
 
     function getData(f){
         $.ajax({
-            url: "data.json",
+            url: SERVER_URL+"/data.json",
             dataType: "json",
             success: function(data){
                 f(data);
